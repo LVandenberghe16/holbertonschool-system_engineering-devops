@@ -1,0 +1,57 @@
+Infrastructure Overview
+Components:
+2 Load Balancers (HAProxy) in a cluster (for high availability)
+
+1 Web Server (Nginx) – handles HTTP requests and serves static content
+
+1 Application Server – runs dynamic logic (e.g., PHP, Node.js, Python)
+
+1 Database Server (MySQL) – manages data storage and queries
+
+Added Elements and Their Purpose
+1 Additional Server
+Why? To host one of the split components (e.g., dedicated application or database server), improving resource usage and scalability.
+
+Load-Balancer Cluster
+Why? Redundancy. If one load balancer fails, the other takes over.
+
+Typically configured using Keepalived for virtual IP failover.
+
+Split Web/Application/Database Servers
+Why?
+
+Isolation of concerns: Easier to manage, debug, and scale each tier independently.
+
+Performance: Prevents resource contention between components.
+
+Security: Tighter control over access between layers.
+
+Web Server vs Application Server
+Web Server (e.g., Nginx)
+Handles HTTP(S) requests
+
+Serves static content (HTML, CSS, JS, images)
+
+Forwards dynamic requests to the application server (reverse proxy)
+
+Application Server
+Processes dynamic content
+
+Runs backend code (e.g., business logic, API handling)
+
+Communicates with the database to retrieve or store data
+
+Benefits of This Scaled-Up Architecture
+High Availability: Load balancer cluster prevents single points of failure.
+
+Modularity: Components can be updated, scaled, or secured individually.
+
+Better Performance: Dedicated resources for each function.
+
+Considerations
+Increased complexity: Requires orchestration and configuration management.
+
+Latency: Network communication between separated components may slightly increase response times.
+
+Requires monitoring: Distributed systems must be closely observed to detect failures.
+

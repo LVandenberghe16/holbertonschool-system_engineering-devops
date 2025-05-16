@@ -1,0 +1,78 @@
+Infrastructure Design
+1. Load Balancer (HAProxy)
+Purpose: Distributes incoming traffic from users to two backend servers.
+
+Location: Acts as the entry point for requests to www.foobar.com.
+
+2. Two Application Servers
+Each application server contains:
+
+Web Server (Nginx): Handles HTTP requests, serves static files, and forwards dynamic ones.
+
+Application Server: Executes business logic.
+
+Application Files: The codebase running the website.
+
+Database (MySQL): Each server has access to a MySQL database set up in a Primary-Replica (Master-Slave) configuration.
+
+Why Add These Components
+Load Balancer (HAProxy)
+Why? To distribute traffic evenly, prevent overload on one server, and enable failover.
+
+Configured Algorithm: Round Robin
+
+Each request is sent to the next server in a circular order.
+
+Simple and ensures even traffic distribution.
+
+Multiple Application Servers
+Why? To improve availability, fault tolerance, and scalability.
+
+If one server fails, the other can continue serving requests.
+
+Database Replication (Primary-Replica)
+Why? To prevent data loss, improve read performance, and support failover.
+
+Load Balancing Mode
+Active-Active
+Both servers are running and serving traffic simultaneously.
+
+The load balancer forwards requests to either of them.
+
+Difference from Active-Passive:
+
+Active-Active: All nodes actively serve traffic.
+
+Active-Passive: Only one active node; the passive one is idle until failure.
+
+Database: Primary-Replica Cluster
+How It Works
+The Primary (Master) database handles all write operations (INSERT, UPDATE, DELETE).
+
+One or more Replica (Slave) databases receive read-only copies of the data through replication.
+
+Replication is usually asynchronous.
+
+Application Perspective
+Writes (e.g., user registration, posting a comment): go to the Primary node.
+
+Reads (e.g., viewing a page): can be served from Replica nodes, reducing load on the Primary.
+
+Issues With This Infrastructure
+1. Single Point of Failure (SPOF)
+HAProxy is a SPOF. If the load balancer fails, the entire website becomes inaccessible.
+
+Solution: Use redundant HAProxy instances with failover (e.g., keepalived).
+
+2. Security Issues
+No firewall: Makes the infrastructure vulnerable to attacks (e.g., DDoS, port scanning).
+
+No HTTPS: Means data (like passwords) is transmitted in plaintext and can be intercepted.
+
+Solution: Use TLS certificates and enable HTTPS via Nginx.
+
+3. No Monitoring
+No way to track server health, performance, or failures.
+
+Solution: Integrate monitoring tools like Prometheus, Grafana, or Nagios for real-time metrics and alerts.
+

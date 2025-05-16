@@ -1,0 +1,19 @@
+What is a server?
+A server is a computer that provides services or resources to other devices over a network. In this case, it hosts the website for users to access.
+
+What is the role of the domain name?
+The domain name (foobar.com) is a human-readable address that maps to an IP address (8.8.8.8) using DNS.
+
+What DNS record is www?
+www is a CNAME or A record. In this task, it is an A record pointing to the server’s IP address 8.8.8.8.
+
+Role of each component:
+Web server (NGINX): Handles HTTP requests from users. It serves static content and forwards dynamic requests to the app server.
+
+Application server: Executes your code (e.g., PHP, Python). It generates dynamic content and handles business logic.
+
+Application files: The code base (e.g., HTML, PHP files) the application server runs.
+
+Database (MySQL): Stores structured data used by the app (e.g., user info, blog posts).
+
+Communication: The server uses HTTP/HTTPS to communicate with the user’s browser.

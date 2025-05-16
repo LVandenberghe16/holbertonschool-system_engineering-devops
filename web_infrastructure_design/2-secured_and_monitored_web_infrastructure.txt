@@ -1,0 +1,73 @@
+Infrastructure Overview
+Components:
+1 Load Balancer (HAProxy) with SSL termination
+
+2 Application Servers, each with:
+
+Web server (Nginx)
+
+Application server
+
+Application files
+
+MySQL DB (1 Primary, 1 Replica)
+
+3 Firewalls (1 per server)
+
+1 SSL certificate for www.foobar.com
+
+3 Monitoring Clients (e.g., for Sumo Logic, Prometheus)
+
+Purpose of Additional Elements
+Firewalls
+Purpose: Control inbound/outbound traffic, block unauthorized access.
+
+Protect SSH, DB ports, and restrict to necessary services (HTTP/HTTPS).
+
+HTTPS with SSL Certificate
+Encrypts communication between user and server.
+
+Prevents data theft, MITM attacks, and ensures user trust.
+
+Monitoring Clients
+Installed on each server to collect system and application metrics.
+
+Tools like Sumo Logic, Prometheus, or Datadog collect logs, CPU/memory usage, and custom metrics.
+
+Monitoring Details
+Why Monitoring?
+Detect outages, performance issues, and unusual behavior.
+
+Provides insights for capacity planning and troubleshooting.
+
+How Monitoring Collects Data
+Monitoring agents collect:
+
+System metrics (CPU, RAM, disk, network)
+
+Logs from Nginx, application, MySQL
+
+Custom metrics (e.g., QPS)
+
+How to Monitor QPS (Queries Per Second)
+Configure Nginx or application to expose request metrics.
+
+Use monitoring agent to track request count and divide by time.
+
+Example: Prometheus scraping metrics exposed at /metrics.
+
+Infrastructure Issues
+1. SSL Termination at Load Balancer
+SSL ends at the load balancer; traffic to backend is unencrypted.
+
+Risk: Internal traffic can be intercepted unless re-encrypted.
+
+2. One Writable MySQL Server
+All writes go to a single Primary DB.
+
+Risk: If it fails, no more writes until manual failover.
+
+3. Servers with All Components
+Each server has web/app/DB; creates tight coupling.
+
+Problem: Difficult to scale independently, more resource contention, more complex failure handling.
